@@ -1,16 +1,18 @@
 package com.khanalsharad.dailyshoppingcart.service.product;
 
+import com.khanalsharad.dailyshoppingcart.dto.ProductDto;
+import com.khanalsharad.dailyshoppingcart.dto.ProductUpdateDto;
 import com.khanalsharad.dailyshoppingcart.model.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product addProduct(Product product);
+    Product addProduct(ProductDto product);
 
     Product getProductById(Long id);
 
-    void updateProduct(Product product, Long productId);
+    Product updateProduct(ProductUpdateDto updatedProductDto, Long productId);
 
     void deleteProduct(Long id);
 
@@ -20,9 +22,15 @@ public interface ProductService {
 
     List<Product> getProductsByBrand(String brand);
 
+    List<Product> getProductsByCategoryAndBrand(String category, String brand);
+
+    List<Product> getProductsByBrandAndName(String brand, String name);
+
     Product getProductByName(String productName);
 
     Long countProductsByCategory(Long categoryId);
 
     Long countProductsByBrand(String brand);
+
+    Long countProductByBrandAndName(String brand, String name);
 }
