@@ -5,6 +5,7 @@ import com.khanalsharad.dailyshoppingcart.exception.CategoryNotFoundException;
 import com.khanalsharad.dailyshoppingcart.model.Category;
 import com.khanalsharad.dailyshoppingcart.repo.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +13,17 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl  implements CategoryService{
+@Slf4j
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     @Override
     public Category createCategory(Category category) {
-        return Optional.of(category).filter(c-> !categoryRepository.existsByName(c.getName()))
-                .map(categoryRepository :: save).orElseThrow(()->
-                        new AlreadyExistException("Category already exist with name{{}}"+ category.getName()));
+        log.info("Creating category: {}", category);
+        return Optional.of(category).filter(c -> !categoryRepository.existsByName(c.getName()))
+                .map(categoryRepository::save).orElseThrow(() ->
+                        new AlreadyExistException("Category already exist with name{{}}" + category.getName()));
     }
 
     @Override
@@ -33,10 +36,10 @@ public class CategoryServiceImpl  implements CategoryService{
 //                    .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
 
 
-        return  Optional.ofNullable(findCategoryById(id)).map(existingCategory ->{
+        return Optional.ofNullable(findCategoryById(id)).map(existingCategory -> {
             existingCategory.setName(category.getName());
             return categoryRepository.save(existingCategory);
-        }).orElseThrow(()-> new CategoryNotFoundException("Category not found"));
+        }).orElseThrow(() -> new CategoryNotFoundException("Category not found"));
     }
 
     @Override
@@ -47,7 +50,7 @@ public class CategoryServiceImpl  implements CategoryService{
     @Override
     public Category findCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(()-> new CategoryNotFoundException("Category not found !"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found !"));
     }
 
     @Override
@@ -57,8 +60,9 @@ public class CategoryServiceImpl  implements CategoryService{
 
     @Override
     public void deleteCategoryById(Long id) {
-    categoryRepository.findById(id).ifPresentOrElse(categoryRepository::delete,
-            ()-> { throw new CategoryNotFoundException("Category not exist with id{{}}" + id);
-    });
+        categoryRepository.findById(id).ifPresentOrElse(categoryRepository::delete,
+                () -> {
+                    throw new CategoryNotFoundException("Category not exist with id{{}}" + id);
+                });
     }
 }

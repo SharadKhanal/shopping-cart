@@ -8,6 +8,7 @@ import com.khanalsharad.dailyshoppingcart.model.Product;
 import com.khanalsharad.dailyshoppingcart.repo.CategoryRepository;
 import com.khanalsharad.dailyshoppingcart.repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -26,16 +28,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(ProductDto productDto) {
-      // first check category if exist save the product if  not save category and then product
-
+        // first check category if exist save the product if  not save category and then product
+        log.info("Adding product {}", productDto);
         Category category = Optional.ofNullable(categoryRepository.findByName(productDto.getCategory().getName())).orElseGet(() ->
         {
-            Category category1 =  new Category(productDto.getCategory().getName());
-            return  categoryRepository.save(category1);
+            Category category1 = new Category(productDto.getCategory().getName());
+            return categoryRepository.save(category1);
         });
 
-      productDto.setCategory(category);
-      return productRepository.save(createProduct(productDto,category));
+        productDto.setCategory(category);
+        return productRepository.save(createProduct(productDto, category));
 
     }
 
@@ -50,21 +52,24 @@ public class ProductServiceImpl implements ProductService {
                 category
         );
     }
+
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Product not found"));
+        log.info("Getting product by id {}", id);
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
     @Override
     public Product updateProduct(ProductUpdateDto updatedProductDto, Long productId) {
-     return productRepository.findById(productId).map(
-             existingProduct -> updateExistingProduct(existingProduct,updatedProductDto)
-     ).map(productRepository :: save)
-             .orElseThrow(()-> new ProductNotFoundException("Product not found"));
+        log.info("Updating product with id {}", productId);
+        return productRepository.findById(productId).map(
+                        existingProduct -> updateExistingProduct(existingProduct, updatedProductDto)
+                ).map(productRepository::save)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateDto updatedProductDto) {
-     existingProduct.setName(updatedProductDto.getName());
+        existingProduct.setName(updatedProductDto.getName());
         existingProduct.setName(updatedProductDto.getName());
         existingProduct.setBrand(updatedProductDto.getBrand());
         existingProduct.setInventory(updatedProductDto.getInventory());
@@ -78,19 +83,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
+        log.info("Deleting product with id {}", id);
         productRepository.findById(id).ifPresentOrElse(productRepository::delete,
-                () -> { throw new ProductNotFoundException("Product not found");
-        });
+                () -> {
+                    throw new ProductNotFoundException("Product not found");
+                });
     }
 
     @Override
     public List<Product> getAllProducts() {
+        log.info("Getting all products");
         return productRepository.findAll();
     }
 
     @Override
     public List<Product> getProductsByCategory(Long categoryId) {
-
+        log.info("Getting products by category {}", categoryId);
         return productRepository.findByCategoryId(categoryId);
     }
 
