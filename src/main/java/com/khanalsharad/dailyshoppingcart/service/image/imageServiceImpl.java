@@ -6,7 +6,6 @@ import com.khanalsharad.dailyshoppingcart.model.Image;
 import com.khanalsharad.dailyshoppingcart.model.Product;
 import com.khanalsharad.dailyshoppingcart.repo.ImageRepository;
 import com.khanalsharad.dailyshoppingcart.service.product.ProductService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,18 +15,23 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class imageServiceImpl implements ImageService {
-
+     private static final Logger logger = Logger.getLogger(imageServiceImpl.class.getName());
     private final ImageRepository imageRepository;
     private final ProductService productService;
 
+    public imageServiceImpl(ImageRepository imageRepository, ProductService productService) {
+        this.imageRepository = imageRepository;
+        this.productService = productService;
+    }
+
     @Override
     public List<ImageDto> save(List<MultipartFile> files, Long productId) {
-        log.info("Saving images for {} product", productId + " image" + files);
+        logger.info("Saving {} images for product {}"+ files.size()+ "productId: {}" + productId);
         Product product = productService.getProductById(productId);
         List<ImageDto> savedImageDto = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -73,7 +77,7 @@ public class imageServiceImpl implements ImageService {
 
     @Override
     public Image updateImageById(MultipartFile file, Long imageId) {
-        log.info("Updating image for {} with id {}", file.getOriginalFilename(), imageId);
+        logger.info("Updating image for {} with id {}"+ file.getOriginalFilename());
         Image image = getImageById(imageId);
         try {
             image.setFileName(file.getOriginalFilename());

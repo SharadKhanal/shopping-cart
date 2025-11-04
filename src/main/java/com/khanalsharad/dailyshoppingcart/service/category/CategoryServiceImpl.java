@@ -10,17 +10,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private static final Logger log = Logger.getLogger(CategoryServiceImpl.class.getName());
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Category createCategory(Category category) {
-        log.info("Creating category: {}", category);
+        log.info("Creating category: {}"+ category);
         return Optional.of(category).filter(c -> !categoryRepository.existsByName(c.getName()))
                 .map(categoryRepository::save).orElseThrow(() ->
                         new AlreadyExistException("Category already exist with name{{}}" + category.getName()));

@@ -22,7 +22,7 @@ public interface ProductService {
 
     List<Product> getProductsByBrand(String brand);
 
-    List<Product> getProductsByCategoryAndBrand(String category, String brand);
+    List<Product> getProductsByCategoryAndBrand(String categoryId, String brand);
 
     List<Product> getProductsByBrandAndName(String brand, String name);
 

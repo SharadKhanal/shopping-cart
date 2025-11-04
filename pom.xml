@@ -51,7 +51,8 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>1.18.24</version>  <!-- Or whatever the latest version is -->
+			<scope>provided</scope>     <!-- Optional is removed and replaced by 'provided' -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

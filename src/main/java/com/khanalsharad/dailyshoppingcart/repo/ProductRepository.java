@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Long countByBrandAndName(String brand, String name);
 
-    List<Product> findByCategoryNameAndBrand(String category, String brand);
+    List<Product> findByCategoryNameAndBrand(String categoryId, String brand);
 
     List<Product> findByBrandAndName(String brand, String name);
 

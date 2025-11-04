@@ -2,6 +2,7 @@ package com.khanalsharad.dailyshoppingcart.controller;
 
 import com.khanalsharad.dailyshoppingcart.dto.ImageDto;
 import com.khanalsharad.dailyshoppingcart.model.Image;
+import com.khanalsharad.dailyshoppingcart.model.Product;
 import com.khanalsharad.dailyshoppingcart.response.ApiResponse;
 import com.khanalsharad.dailyshoppingcart.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("${api.prefix}/images")
-@RequiredArgsConstructor
 public class ImageController {
 
     private final ImageService imageService;
+
+    public ImageController(ImageService imageService) {
+        this.imageService = imageService;
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse> uploadImage(@RequestParam("file") List<MultipartFile> file, @RequestParam Long productId) {
@@ -32,9 +36,10 @@ public class ImageController {
             List<ImageDto> imageDtos = imageService.save(file, productId);
             return ResponseEntity.ok(new ApiResponse("Upload Success", imageDtos));
         } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Upload Failed!", e.getMessage()));
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
+
 
     @GetMapping("/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable("imageId") Long imageId) throws SQLException {
@@ -57,7 +62,7 @@ public class ImageController {
         } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Failed", INTERNAL_SERVER_ERROR));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Failed", null));
     }
 
     @DeleteMapping("/delete/{imageId}")
@@ -72,6 +77,6 @@ public class ImageController {
         } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Failed", INTERNAL_SERVER_ERROR));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Failed", null));
     }
 }

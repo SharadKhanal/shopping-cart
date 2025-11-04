@@ -7,29 +7,27 @@ import com.khanalsharad.dailyshoppingcart.model.Category;
 import com.khanalsharad.dailyshoppingcart.model.Product;
 import com.khanalsharad.dailyshoppingcart.repo.CategoryRepository;
 import com.khanalsharad.dailyshoppingcart.repo.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-//    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
-//        this.productRepository = productRepository;
-//        this.categoryRepository = categoryRepository;
-//    }
+    private static final Logger log = Logger.getLogger(ProductServiceImpl.class.getName());
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Product addProduct(ProductDto productDto) {
         // first check category if exist save the product if  not save category and then product
-        log.info("Adding product {}", productDto);
+        log.info("Adding product {}"+ productDto);
         Category category = Optional.ofNullable(categoryRepository.findByName(productDto.getCategory().getName())).orElseGet(() ->
         {
             Category category1 = new Category(productDto.getCategory().getName());
@@ -55,13 +53,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        log.info("Getting product by id {}", id);
+        log.info("Getting product by id {}"+ id);
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
     @Override
     public Product updateProduct(ProductUpdateDto updatedProductDto, Long productId) {
-        log.info("Updating product with id {}", productId);
+        log.info("Updating product with id {}"+ productId);
         return productRepository.findById(productId).map(
                         existingProduct -> updateExistingProduct(existingProduct, updatedProductDto)
                 ).map(productRepository::save)
@@ -83,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        log.info("Deleting product with id {}", id);
+        log.info("Deleting product with id {}"+ id);
         productRepository.findById(id).ifPresentOrElse(productRepository::delete,
                 () -> {
                     throw new ProductNotFoundException("Product not found");
@@ -98,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductsByCategory(Long categoryId) {
-        log.info("Getting products by category {}", categoryId);
+        log.info("Getting products by category {}"+ categoryId);
         return productRepository.findByCategoryId(categoryId);
     }
 
@@ -108,8 +106,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
-        return productRepository.findByCategoryNameAndBrand(category, brand);
+    public List<Product> getProductsByCategoryAndBrand(String categoryId, String brand) {
+        return productRepository.findByCategoryNameAndBrand(categoryId, brand);
     }
 
     @Override
