@@ -1,5 +1,8 @@
 package com.khanalsharad.dailyshoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +31,12 @@ public class Product {
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Image> images;
 
 
@@ -64,9 +68,9 @@ public class Product {
         return category;
     }
 
-    public List<Image> getImages() {
-        return images;
-    }
+//    public List<Image> getImages() {
+//        return images;
+//    }
 
     public void setId(Long id) {
         this.id = id;
@@ -96,9 +100,9 @@ public class Product {
         this.category = category;
     }
 
-    public void setImages(List<Image> images) {
-        this.images = images;
-    }
+//    public void setImages(List<Image> images) {
+//        this.images = images;
+//    }
 
     public Product(String name, String brand, BigDecimal price, int inventory, String description, Category category) {
         this.name = name;
@@ -107,5 +111,9 @@ public class Product {
         this.inventory = inventory;
         this.description = description;
         this.category = category;
+    }
+
+    public Product(){
+
     }
 }

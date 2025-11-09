@@ -1,6 +1,7 @@
 package com.khanalsharad.dailyshoppingcart.service.image;
 
 import com.khanalsharad.dailyshoppingcart.dto.ImageDto;
+import com.khanalsharad.dailyshoppingcart.dto.ProductDto;
 import com.khanalsharad.dailyshoppingcart.exception.ImageNotFoundException;
 import com.khanalsharad.dailyshoppingcart.model.Image;
 import com.khanalsharad.dailyshoppingcart.model.Product;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,7 +44,7 @@ public class imageServiceImpl implements ImageService {
                 image.setImage(new SerialBlob(file.getBytes()));
                 image.setProduct(product);
 
-                String buildDownloadUrl = "api/v1/images/doownload/";
+                String buildDownloadUrl = "api/v1/images/download/";
                 String downloadUrl = buildDownloadUrl + image.getId();
                 image.setDownloadUrl(downloadUrl);
                 Image savedImage = imageRepository.save(image);
@@ -99,7 +101,24 @@ public class imageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<Image> getAllImagesByProductId(Long productId) {
-        return imageRepository.findByProductId(productId);
+    public List<ImageDto> getAllImagesByProductId(Long productId) {
+        List<Image> images = imageRepository.findByProductId(productId);
+        return images.stream().map(this::getImageResponse).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ImageDto> getAllImages() {
+        List<Image> images = imageRepository.findAll();
+        return images.stream().map(this::getImageResponse)
+                .collect(Collectors.toList());
+    }
+    public ImageDto getImageResponse(Image image){
+
+        ImageDto imageDto = new ImageDto();
+        imageDto.setImageId(image.getId());
+        imageDto.setImageName(image.getFileName());
+        imageDto.setDownloadUrl(image.getDownloadUrl());
+        return imageDto;
+    }
+
 }

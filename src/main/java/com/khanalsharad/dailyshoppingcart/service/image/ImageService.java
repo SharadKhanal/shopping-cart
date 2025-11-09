@@ -18,5 +18,7 @@ public interface ImageService {
 
     void deleteImageById(Long id);
 
-    List<Image> getAllImagesByProductId(Long productId);
+    List<ImageDto> getAllImagesByProductId(Long productId);
+
+    List<ImageDto> getAllImages();
 }

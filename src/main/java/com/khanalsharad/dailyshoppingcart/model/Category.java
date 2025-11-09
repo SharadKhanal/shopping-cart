@@ -1,5 +1,6 @@
 package com.khanalsharad.dailyshoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Category {
 
     @Id
@@ -21,8 +22,12 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Product> products;
 
+    public Category() {
+        // Empty constructor to satisfy JPA requirement
+    }
     public Long getId() {
         return id;
     }
@@ -31,9 +36,9 @@ public class Category {
         return name;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
+//    public List<Product> getProducts() {
+//        return products;
+//    }
 
     public void setId(Long id) {
         this.id = id;
@@ -43,9 +48,9 @@ public class Category {
         this.name = name;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 
     public Category(String name) {
         this.name = name;

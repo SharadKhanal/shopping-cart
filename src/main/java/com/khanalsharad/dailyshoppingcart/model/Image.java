@@ -1,5 +1,8 @@
 package com.khanalsharad.dailyshoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,12 +26,15 @@ public class Image {
     private String fileType;
 
     @Lob
+    @JsonProperty("image")
+    @JsonIgnore
     private Blob  image;
 
     private String downloadUrl;
 
     @ManyToOne
     @JoinColumn(name="product_id")
+    @JsonBackReference // 👈 Back (child) side
     private Product product;
 
     public Long getId() {

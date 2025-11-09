@@ -1,10 +1,11 @@
 package com.khanalsharad.dailyshoppingcart.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ImageDto {
 
     private Long imageId;
@@ -12,6 +13,7 @@ public class ImageDto {
     private String imageName;
 
     private String downloadUrl;
+
 
     public Long getImageId() {
         return imageId;

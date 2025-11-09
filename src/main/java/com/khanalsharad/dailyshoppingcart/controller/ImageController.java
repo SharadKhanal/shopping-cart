@@ -2,10 +2,8 @@ package com.khanalsharad.dailyshoppingcart.controller;
 
 import com.khanalsharad.dailyshoppingcart.dto.ImageDto;
 import com.khanalsharad.dailyshoppingcart.model.Image;
-import com.khanalsharad.dailyshoppingcart.model.Product;
 import com.khanalsharad.dailyshoppingcart.response.ApiResponse;
 import com.khanalsharad.dailyshoppingcart.service.image.ImageService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +19,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
-@RequestMapping("${api.prefix}/images")
+@RequestMapping("/api/v1/images")
 public class ImageController {
 
     private final ImageService imageService;
@@ -36,6 +34,16 @@ public class ImageController {
             List<ImageDto> imageDtos = imageService.save(file, productId);
             return ResponseEntity.ok(new ApiResponse("Upload Success", imageDtos));
         } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse> getAllImages() {
+        try {
+            List<ImageDto> images = imageService.getAllImages();
+            return ResponseEntity.ok(new ApiResponse("Success", images));
+        }catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -79,4 +87,26 @@ public class ImageController {
         }
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Failed", null));
     }
+
+    @GetMapping("/getByProductId/{productId}")
+        public ResponseEntity<ApiResponse> getImageByProductId(@PathVariable("productId") Long productId) {
+
+        try {
+            List<ImageDto> imageDtos = imageService.getAllImagesByProductId(productId);
+            return ResponseEntity.ok(new ApiResponse("Success", imageDtos));
+        } catch (Exception e){
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/getImageById/{imageId}")
+    public ResponseEntity<ApiResponse> getImageById(@PathVariable("imageId") Long imageId) {
+        try {
+            Image image = imageService.getImageById(imageId);
+            return ResponseEntity.ok(new ApiResponse("Success", image));
+        } catch (Exception e){
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
 }

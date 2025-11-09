@@ -16,15 +16,15 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
-    List<Product> getAllProducts();
+    List<ProductDto> getAllProducts();
 
-    List<Product> getProductsByCategory(Long categoryId);
+    List<ProductDto> getProductsByCategory(Long categoryId);
 
-    List<Product> getProductsByBrand(String brand);
+    List<ProductDto> getProductsByBrand(String brand);
 
-    List<Product> getProductsByCategoryAndBrand(String categoryId, String brand);
+    List<ProductDto> getProductsByCategoryAndBrand(String categoryId, String brand);
 
-    List<Product> getProductsByBrandAndName(String brand, String name);
+    List<ProductDto> getProductsByBrandAndName(String brand, String name);
 
     Product getProductByName(String productName);
 

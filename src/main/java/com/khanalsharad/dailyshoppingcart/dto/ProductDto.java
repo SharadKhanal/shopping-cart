@@ -1,15 +1,14 @@
 package com.khanalsharad.dailyshoppingcart.dto;
 
-import com.khanalsharad.dailyshoppingcart.model.Category;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,7 +27,17 @@ public class ProductDto {
 
     private String description;
 
-    private Category category;
+    private String category;
+
+    private List<ImageDto> images;
+
+    public List<ImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ImageDto> images) {
+        this.images = images;
+    }
 
     public Long getId() {
         return id;
@@ -54,7 +63,7 @@ public class ProductDto {
         return description;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
@@ -82,7 +91,7 @@ public class ProductDto {
         this.description = description;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 }
