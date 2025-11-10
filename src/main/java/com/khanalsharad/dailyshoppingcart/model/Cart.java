@@ -31,11 +31,10 @@ public class Cart {
     }
 
     public void removeCartItem(CartItem cartItem) {
-      if (cartItems != null && cartItems.remove(cartItem) ) {
+        this.cartItems.remove(cartItem);
           cartItem.setCart(null);
-
           updateTotalPrice();
-      }
+
     }
 
     private  void updateTotalPrice() {

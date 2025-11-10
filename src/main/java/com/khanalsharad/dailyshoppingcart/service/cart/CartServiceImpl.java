@@ -1,8 +1,7 @@
 package com.khanalsharad.dailyshoppingcart.service.cart;
 
-import com.khanalsharad.dailyshoppingcart.exception.NotFoundException;
+import com.khanalsharad.dailyshoppingcart.exception.ResourceNotFoundException;
 import com.khanalsharad.dailyshoppingcart.model.Cart;
-import com.khanalsharad.dailyshoppingcart.model.CartItem;
 import com.khanalsharad.dailyshoppingcart.repo.CartItemRepository;
 import com.khanalsharad.dailyshoppingcart.repo.CartRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCart(Long id) {
-        Cart cart= cartRepository.findById(id).orElseThrow(()-> new NotFoundException("Cart not found"));
+        Cart cart= cartRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Cart not found"));
 
         BigDecimal totalAmount = cart.getTotalPrice();
         cart.setTotalPrice(totalAmount);
