@@ -1,5 +1,6 @@
 package com.khanalsharad.dailyshoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,7 +24,31 @@ public class Cart {
     private BigDecimal totalPrice = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> cartItems;
+    private Set<CartItem> cartItems = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Set<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setCartItems(Set<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
 
     public void addCartItem(CartItem cartItem) {
       cartItems.add(cartItem);

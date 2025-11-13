@@ -68,6 +68,7 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void updateItemQuantity(Long cartId, Long productId, int quantity) {
        Cart cart =  cartService.getCart(cartId);
+       BigDecimal productPrice = productService.getProductById(productId).getPrice();
        cart.getCartItems()
                .stream().filter(items-> items.getProduct().getId().equals(productId))
                .findFirst()
@@ -76,7 +77,9 @@ public class CartItemServiceImpl implements CartItemService {
                    items.setUnitPrice(items.getProduct().getPrice());
                    items.setTotalPrice();
                        });
-        BigDecimal totalPrice = cart.getTotalPrice();
+        BigDecimal totalPrice =  productPrice.multiply(new BigDecimal(quantity)); ;
+
+//        BigDecimal totalPrice =  cart.getCartItems().stream().map(CartItem::getTotalPrice).reduce(totalPrice, BigDecimal::add);
         cart.setTotalPrice(totalPrice);
         cartRepository.save(cart);
     }

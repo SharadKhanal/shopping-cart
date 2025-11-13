@@ -1,5 +1,6 @@
 package com.khanalsharad.dailyshoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name= "cart_id")
+    @JsonBackReference
     private Cart cart;
 
     public Long getId() {

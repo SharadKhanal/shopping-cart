@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
+
 @Service
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     public CartServiceImpl(CartRepository cartRepository, CartItemRepository cartItemRepository) {
         this.cartRepository = cartRepository;
@@ -26,27 +29,35 @@ public class CartServiceImpl implements CartService {
         BigDecimal totalAmount = cart.getTotalPrice();
         cart.setTotalPrice(totalAmount);
         return cartRepository.save(cart);
-
-
     }
 
-//    @Override
-//    public void clearCart(Long id) {
-//    Cart cart = getCart(id);
-//    cartItemRepository.deteteAllByCartId(id);
-//    cart.getCartItems().clear();
-//    cartRepository.deleteById(id);
-//    }
-     @Override
-     @Transactional
+    @Override
+    @Transactional
     public void clearCart(Long id) {
-        Cart cart = getCart(id); // loads managed entity
-        cartRepository.delete(cart); // ✅ triggers cascade delete
+    Cart cart = getCart(id);
+    cartItemRepository.deleteAllByCartId(id);
+    cart.getCartItems().clear();
+    cartRepository.deleteById(id);
     }
+//     @Override
+//     @Transactional
+//    public void clearCart(Long id) {
+//        Cart cart = getCart(id); // loads managed entity
+//        cartRepository.delete(cart); // ✅ triggers cascade delete
+//    }
 
     @Override
     public BigDecimal getTotalPrice(Long id) {
         Cart cart = getCart(id);
         return cart.getTotalPrice();
     }
+
+    @Override
+    @Transactional
+   public Long initializeNewCart(){
+        Cart cart = new Cart();
+//        Long newCartId = cartIdGenerator.incrementAndGet();
+//        cart.setId(newCartId);
+        return cartRepository.save(cart).getId();
+ }
 }
