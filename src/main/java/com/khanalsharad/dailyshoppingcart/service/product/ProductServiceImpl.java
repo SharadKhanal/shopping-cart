@@ -10,7 +10,6 @@ import com.khanalsharad.dailyshoppingcart.model.Product;
 import com.khanalsharad.dailyshoppingcart.repo.CategoryRepository;
 import com.khanalsharad.dailyshoppingcart.repo.ImageRepository;
 import com.khanalsharad.dailyshoppingcart.repo.ProductRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,13 +24,11 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
-    private final ModelMapper modelMapper;
     private static final Logger log = Logger.getLogger(ProductServiceImpl.class.getName());
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository, ModelMapper modelMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.imageRepository = imageRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override

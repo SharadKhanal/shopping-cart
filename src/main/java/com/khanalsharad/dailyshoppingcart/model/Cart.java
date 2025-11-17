@@ -26,6 +26,10 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();
 
+    @OneToOne
+    @JoinColumn(name= "user_id")
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -50,6 +54,12 @@ public class Cart {
         this.cartItems = cartItems;
     }
 
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
     public void addCartItem(CartItem cartItem) {
       cartItems.add(cartItem);
       cartItem.setCart(this);

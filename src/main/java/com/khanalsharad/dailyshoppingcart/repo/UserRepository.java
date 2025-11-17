@@ -1,10 +1,10 @@
 package com.khanalsharad.dailyshoppingcart.repo;
 
-import com.khanalsharad.dailyshoppingcart.model.CartItem;
+import com.khanalsharad.dailyshoppingcart.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-    void deleteAllByCartId(Long id);
+public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByEmail(String email);
 }

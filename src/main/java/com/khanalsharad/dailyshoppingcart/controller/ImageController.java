@@ -1,12 +1,14 @@
 package com.khanalsharad.dailyshoppingcart.controller;
 
 import com.khanalsharad.dailyshoppingcart.dto.ImageDto;
+import com.khanalsharad.dailyshoppingcart.exception.ImageNotFoundException;
 import com.khanalsharad.dailyshoppingcart.model.Image;
 import com.khanalsharad.dailyshoppingcart.response.ApiResponse;
 import com.khanalsharad.dailyshoppingcart.service.image.ImageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,13 +52,39 @@ public class ImageController {
 
 
     @GetMapping("/download/{imageId}")
-    public ResponseEntity<Resource> downloadImage(@PathVariable("imageId") Long imageId) throws SQLException {
-        Image image = imageService.getImageById(imageId);
-        ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
+    public ResponseEntity<?> downloadImage(@PathVariable("imageId") Long imageId) {
+        try {
+            Image image = imageService.getImageById(imageId);
+            if (image == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Image not found");
+            }
+            ByteArrayResource resource = new ByteArrayResource(
+                    image.getImage().getBytes(1, (int) image.getImage().length())
+            );
 
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType())).header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + image.getFileName() + "\"").body(resource);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(image.getFileType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + image.getFileName() + "\"")
+                    .body(resource);
+
+        } catch (ImageNotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        } catch (SQLException e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Unable to process image data");
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Unexpected error occurred");
+        }
     }
+
 
     @PutMapping("/update/{imageId}")
     public ResponseEntity<ApiResponse> updateImage(@PathVariable("imageId") Long imageId, @RequestBody MultipartFile file) {

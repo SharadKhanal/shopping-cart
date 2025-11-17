@@ -1,10 +1,9 @@
 package com.khanalsharad.dailyshoppingcart.repo;
 
-import com.khanalsharad.dailyshoppingcart.model.CartItem;
+import com.khanalsharad.dailyshoppingcart.model.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-    void deleteAllByCartId(Long id);
+public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 }
